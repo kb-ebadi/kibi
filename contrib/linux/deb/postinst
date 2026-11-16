@@ -1,22 +1,22 @@
 #!/bin/sh
-# Kiri's engine as a system service; whoever ran apt joins the kiri group
-# and gets the kiri docker context.
+# Kibi's engine as a system service; whoever ran apt joins the kibi group
+# and gets the kibi docker context.
 set -e
 if [ "$1" = configure ]; then
-    getent group kiri >/dev/null || addgroup --system kiri
+    getent group kibi >/dev/null || addgroup --system kibi
     if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != root ] && id "$SUDO_USER" >/dev/null 2>&1; then
-        adduser "$SUDO_USER" kiri >/dev/null || true
+        adduser "$SUDO_USER" kibi >/dev/null || true
         # The CLI's context, made as that person so it lands in their ~/.docker.
-        su - "$SUDO_USER" -c 'docker context inspect kiri >/dev/null 2>&1 || docker context create kiri --docker host=unix:///run/kiri/docker.sock >/dev/null' || true
-        su - "$SUDO_USER" -c 'docker context use kiri >/dev/null' || true
-        echo "Kiri: $SUDO_USER is in the kiri group. Log out and back in once for it to apply."
+        su - "$SUDO_USER" -c 'docker context inspect kibi >/dev/null 2>&1 || docker context create kibi --docker host=unix:///run/kibi/docker.sock >/dev/null' || true
+        su - "$SUDO_USER" -c 'docker context use kibi >/dev/null' || true
+        echo "Kibi: $SUDO_USER is in the kibi group. Log out and back in once for it to apply."
     else
-        echo "Kiri: add yourself to the kiri group (sudo adduser \$USER kiri), then log out and back in."
+        echo "Kibi: add yourself to the kibi group (sudo adduser \$USER kibi), then log out and back in."
     fi
     if [ -d /run/systemd/system ]; then
         systemctl daemon-reload
-        systemctl enable kiri.service >/dev/null 2>&1 || true
-        systemctl restart kiri.service || true
+        systemctl enable kibi.service >/dev/null 2>&1 || true
+        systemctl restart kibi.service || true
     fi
 fi
 exit 0

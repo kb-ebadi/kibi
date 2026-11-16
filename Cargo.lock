@@ -719,7 +719,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kiri"
+name = "kibi"
 version = "0.0.0"
 dependencies = [
  "block2",
@@ -727,10 +727,10 @@ dependencies = [
  "flate2",
  "gtk",
  "javascriptcore-rs",
- "kiri-image",
- "kiri-proto",
- "kiri-share-proto",
- "kiri-vmm",
+ "kibi-image",
+ "kibi-proto",
+ "kibi-share-proto",
+ "kibi-vmm",
  "libc",
  "objc2",
  "objc2-app-kit",
@@ -750,7 +750,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kiri-image"
+name = "kibi-image"
 version = "0.0.0"
 dependencies = [
  "serde",
@@ -761,22 +761,22 @@ dependencies = [
 ]
 
 [[package]]
-name = "kiri-init"
+name = "kibi-init"
 version = "0.0.0"
 dependencies = [
  "flate2",
- "kiri-proto",
+ "kibi-proto",
  "libc",
  "ruzstd",
  "tar",
 ]
 
 [[package]]
-name = "kiri-proto"
+name = "kibi-proto"
 version = "0.0.0"
 
 [[package]]
-name = "kiri-share-proto"
+name = "kibi-share-proto"
 version = "0.0.0"
 dependencies = [
  "hmac",
@@ -784,7 +784,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kiri-vmm"
+name = "kibi-vmm"
 version = "0.0.0"
 dependencies = [
  "block2",
@@ -796,11 +796,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "kiri-win"
+name = "kibi-win"
 version = "0.0.0"
 dependencies = [
  "embed-resource",
- "kiri-share-proto",
+ "kibi-share-proto",
  "libc",
  "rustls",
  "serde",

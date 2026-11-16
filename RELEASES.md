@@ -1,6 +1,6 @@
-# How Kiri releases are built
+# How Kibi releases are built
 
-Kiri's source is all here. Releases are built from it by a private
+Kibi's source is all here. Releases are built from it by a private
 repository that holds only the build workflows. This page says what
 that repository does, what it doesn't, and how you can check what you
 download.
@@ -9,7 +9,7 @@ download.
 
 The release builds need our signing keys: Apple's Developer ID for the Mac,
 our Windows signing certificate, and the token that uploads to
-download.runkiri.com. Public CI runs code from anyone who opens a pull
+download.runkibi.kambiz.site. Public CI runs code from anyone who opens a pull
 request, so machines that hold those keys can't be public CI runners. VS Code,
 IntelliJ and Chrome are built the same way: open source, released from the
 maker's own build machines.
@@ -31,7 +31,7 @@ maker's own build machines.
      then `packaging/linux/test-host.sh`, which installs them on Ubuntu and
      Fedora and runs containers through them. A build that doesn't install
      and run isn't released.
-4. The files are uploaded to download.runkiri.com, and the version goes
+4. The files are uploaded to download.runkibi.kambiz.site, and the version goes
    live (update feeds, website) only once the Mac, Windows and Linux builds
    are all up. The upload scripts stay private, since they hold our
    storage and signing setup; they upload and check files, nothing else.
@@ -46,14 +46,14 @@ public repository.
 
 ## Checking what you download
 
-- **Mac:** `Kiri.app` is signed with our Developer ID and notarized by Apple.
-  Check it with `codesign --verify --deep --strict -v /Applications/Kiri.app`
-  and `spctl -a -vv /Applications/Kiri.app`.
+- **Mac:** `Kibi.app` is signed with our Developer ID and notarized by Apple.
+  Check it with `codesign --verify --deep --strict -v /Applications/Kibi.app`
+  and `spctl -a -vv /Applications/Kibi.app`.
 - **Linux:** every release has `SHA256SUMS-linux` next to its packages.
   Check with `sha256sum -c --ignore-missing SHA256SUMS-linux`.
 - **Windows:** Authenticode signing is being set up. Until it's in place the
   installer is unsigned, and Windows SmartScreen asks before running it.
-- **Updates:** Kiri checks every update's SHA-256 against the release feed
+- **Updates:** Kibi checks every update's SHA-256 against the release feed
   before installing it. On the Mac it also checks that the new app is signed
   by the same Developer ID team as the running one, not just signed by
   someone.

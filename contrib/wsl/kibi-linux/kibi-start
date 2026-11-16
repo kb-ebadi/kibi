@@ -1,0 +1,17 @@
+#!/bin/sh
+# Starts Kibi's engine after setup or when kibi-win wakes the distro.
+# The daemon serves its unix socket; kibi-win carries the Windows docker CLI
+# to it over `kibi bridge`.
+export HOME=/var/lib/kibi-daemon
+mkdir -p "$HOME" /var/log
+pgrep -f '/usr/local/bin/kibi daemon' >/dev/null 2>&1 && exit 0
+rm -f "$HOME/.kibi/run/docker.sock"
+nohup /usr/local/bin/kibi daemon >>/var/log/kibi.log 2>&1 &
+i=0
+while [ "$i" -lt 50 ]; do
+  [ -S "$HOME/.kibi/run/docker.sock" ] && exit 0
+  sleep 0.1
+  i=$((i + 1))
+done
+echo "kibi daemon did not create its socket; see /var/log/kibi.log" >&2
+exit 1

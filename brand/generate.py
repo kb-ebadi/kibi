@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Writes the Kiri logo SVG family into brand/logo and brand/icon."""
+"""Writes the Kibi logo SVG family into brand/logo and brand/icon."""
 import os, sys
 
 OUT = sys.argv[1]  # brand dir
@@ -47,20 +47,22 @@ SW = 9
 
 
 def wordmark(ink, dot):
+    # k, i, b, i. The b replaces the old r: an ascender and a bowl at x-height.
     return f'''<g fill="none" stroke="{ink}" stroke-width="{SW}" stroke-linecap="round" stroke-linejoin="round">
     <path d="M4.5 14.5V51.5"/>
     <path d="M29 30.5L8 46"/>
     <path d="M16.5 40.5L29.5 51.5"/>
     <path d="M45 30.5V51.5"/>
-    <path d="M61 51.5V41C61 34 66 30.5 74 30.5"/>
-    <path d="M88.5 30.5V51.5"/>
+    <path d="M61 14.5V51.5"/>
+    <path d="M61 33.5C74 29.5 86 34 86 42.5C86 51 74 55 61 50.5"/>
+    <path d="M100.5 30.5V51.5"/>
   </g>
   <g fill="{dot}">
     <rect x="40.5" y="10.5" width="9" height="9" rx="2.4" transform="rotate(-10 45 15)"/>
-    <rect x="84" y="10.5" width="9" height="9" rx="2.4" transform="rotate(-10 88.5 15)"/>
+    <rect x="96" y="10.5" width="9" height="9" rx="2.4" transform="rotate(-10 100.5 15)"/>
   </g>'''
 
-WM_W = 93  # wordmark width in its own units
+WM_W = 105  # wordmark width in its own units (right edge of the last stroke)
 
 
 def svg(w, h, body, title, extra=''):
@@ -90,22 +92,23 @@ for name, v in variants.items():
         m = mark_color(v['lines'], uid)
         wm = wordmark(v['ink'], v['dot'])
     # mark only
-    write(f'logo/kiri-mark-{name}.svg', svg(64, 64, m, 'Kiri'))
+    write(f'logo/kibi-mark-{name}.svg', svg(64, 64, m, 'Kibi'))
     # horizontal: mark 64 tall, wordmark scaled 1.0 sitting on the box baseline
     # box spans y 12..52; wordmark spans y 10..56 -> shift so baseline 56 -> 52
-    hw = 64 + 12 + WM_W * 0.8
+    # The last stroke sits on WM_W; a few units keep its round cap inside the canvas.
+    hw = 64 + 12 + WM_W * 0.8 + 4
     body = f'{m}\n  <g transform="translate(76 7.2) scale(0.8)">{wm}</g>'
-    write(f'logo/kiri-horizontal-{name}.svg', svg(hw, 64, body, 'Kiri'))
+    write(f'logo/kibi-horizontal-{name}.svg', svg(hw, 64, body, 'Kibi'))
     # stacked: mark scaled 1.6 above, wordmark centred below
     sw = 120
     mx = (sw - 64 * 1.6) / 2
     body = (f'<g transform="translate({mx:g} 0) scale(1.6)">{m}</g>\n'
             f'  <g transform="translate({(sw - WM_W) / 2:g} 104)">{wm}</g>')
-    write(f'logo/kiri-stacked-{name}.svg', svg(sw, 164, body, 'Kiri'))
+    write(f'logo/kibi-stacked-{name}.svg', svg(sw, 164, body, 'Kibi'))
 
 # ---------- favicon: simplified mark, no speed lines, fills the tile ----------
 fav = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <title>Kiri</title>
+  <title>Kibi</title>
   <g transform="translate(2.6 0) skewX(-10)">
     <clipPath id="fc"><rect x="5" y="2" width="26" height="28" rx="7"/></clipPath>
     <rect x="5" y="2" width="26" height="28" rx="7" fill="{EMBER}"/>
@@ -115,7 +118,7 @@ fav = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32"
   </g>
 </svg>
 '''
-write('logo/kiri-favicon.svg', fav)
+write('logo/kibi-favicon.svg', fav)
 
 # ---------- app icon 1024 ----------
 def app_icon(m, rx, width, tile_note):
@@ -127,7 +130,7 @@ def app_icon(m, rx, width, tile_note):
     scale = round(width * t / 59, 3)
     ax, ay = round(512 - 30.5 * scale, 1), round(512 - 32 * scale, 1)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <title>Kiri app icon</title>
+  <title>Kibi app icon</title>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#1B232C"/>
@@ -161,9 +164,9 @@ def app_icon(m, rx, width, tile_note):
 '''
 
 
-write('icon/kiri-app-icon.svg', app_icon(100, 185, 0.84, 'macOS-style rounded tile with 100px safe margin'))
+write('icon/kibi-app-icon.svg', app_icon(100, 185, 0.84, 'macOS-style rounded tile with 100px safe margin'))
 # Windows draws icons to the edge of their square, and Apple's margin makes
-# Kiri look a size small in the taskbar: the tile fills the canvas (same
+# Kibi look a size small in the taskbar: the tile fills the canvas (same
 # corner ratio) and the mark is drawn larger. Rendered to PNGs and an .ico
 # by windows-icons.ps1.
-write('icon/kiri-app-icon-windows.svg', app_icon(0, 230, 0.86, 'Windows: the tile fills the square, the mark drawn larger'))
+write('icon/kibi-app-icon-windows.svg', app_icon(0, 230, 0.86, 'Windows: the tile fills the square, the mark drawn larger'))

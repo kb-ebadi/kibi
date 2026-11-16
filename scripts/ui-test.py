@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Runs the window's page tests (tests/ui/*.js) in headless Chrome.
 
-Each test file runs in the real page (crates/kiri/src/ui/index.html, with its
+Each test file runs in the real page (crates/kibi/src/ui/index.html, with its
 icons) after tests/ui/fixture.js, and calls report() with lines that start
 with PASS or FAIL. Exits non-zero if any test fails or a page errors. A
 test's first lines may say `// parity: macos windows linux` (run as each
 system and compare), `// lang: de` (the language it opens in), `// window:
 760x480` (the window's size) or `// page: setup` (Windows' setup window,
-crates/kiri-win/src/setup.html, instead of the main window).
+crates/kibi-win/src/setup.html, instead of the main window).
 
     python3 scripts/ui-test.py [tests/ui/switch.js ...]
 """
@@ -15,7 +15,7 @@ import html, json, os, re, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-UI = os.path.join(ROOT, "crates/kiri/src/ui")
+UI = os.path.join(ROOT, "crates/kibi/src/ui")
 
 
 # The results, in the page; and to the page around it when a test runs in a
@@ -42,17 +42,17 @@ def opening(pick, packed):
 
 def host(packed):
     """The host's half of langwords, after the fixture's recorder: it answers as
-    lang.rs's words_js does, calling kiriWords with that language's words, at
+    lang.rs's words_js does, calling kibiWords with that language's words, at
     once (a real host answers a moment later). hostHold = true keeps the answers
     until hostFlush(), for a test of the moment in between."""
     words = {t: w for t, w in packed.items() if t != "en"}
     return (f"const HOST_WORDS = {json.dumps(words, ensure_ascii=False)};\n"
             "let hostHold = false; const hostHeld = [];\n"
             "const hostFlush = () => hostHeld.splice(0).forEach((f) => f());\n"
-            "{ const post = window.webkit.messageHandlers.kiri.postMessage;\n"
-            "  window.webkit.messageHandlers.kiri.postMessage = (m) => { post(m); const o = JSON.parse(m);\n"
+            "{ const post = window.webkit.messageHandlers.kibi.postMessage;\n"
+            "  window.webkit.messageHandlers.kibi.postMessage = (m) => { post(m); const o = JSON.parse(m);\n"
             "    if (o.cmd !== \"langwords\" || !HOST_WORDS[o.name]) return;\n"
-            "    const answer = () => window.kiriWords && kiriWords({ [o.name]: HOST_WORDS[o.name] });\n"
+            "    const answer = () => window.kibiWords && kibiWords({ [o.name]: HOST_WORDS[o.name] });\n"
             "    if (hostHold) hostHeld.push(answer); else answer(); }; }\n")
 
 
@@ -71,21 +71,21 @@ def lang_of(test):
 
 
 def setup_page(test):
-    """kiri-win's setup window (crates/kiri-win/src/setup.html), for a test whose
+    """kibi-win's setup window (crates/kibi-win/src/setup.html), for a test whose
     first lines say `// page: setup`: as assemble.rs's words() builds it, with
     the language step and the words for the language it opens in. `sent`
     records what the page asks the host; host() answers langwords."""
     packed, pick = strings(), lang_of(test)
-    src = (open(os.path.join(ROOT, "crates/kiri-win/src/setup.html")).read()
+    src = (open(os.path.join(ROOT, "crates/kibi-win/src/setup.html")).read()
            .replace("/*LANGSTEP*/", open(os.path.join(UI, "langstep.js")).read(), 1)
-           .replace("/*LANG*/", f"window.KIRI_LANG = {json.dumps({'os': ['en-US'], 'pick': pick})};", 1)
+           .replace("/*LANG*/", f"window.KIBI_LANG = {json.dumps({'os': ['en-US'], 'pick': pick})};", 1)
            .replace("/*STRINGS*/{}", json.dumps(opening(pick, packed), ensure_ascii=False), 1))
     # The page draws a host state on the next frame; headless Chrome's frames
     # don't keep pace with --virtual-time-budget (the dump can come first), so
     # a frame here is a task.
     fixture = ('window.requestAnimationFrame = (f) => setTimeout(() => f(performance.now()), 0);\n'
                'const sent = [];\n'
-               'window.webkit = { messageHandlers: { kiri: { postMessage: (m) => { const o = JSON.parse(m); sent.push({ type: o.cmd, ...o }); } } } };\n')
+               'window.webkit = { messageHandlers: { kibi: { postMessage: (m) => { const o = JSON.parse(m); sent.push({ type: o.cmd, ...o }); } } } };\n')
     i = src.index("<script>")
     src = src[:i] + CATCH + src[i:]
     return src[: src.rindex("</body>")] + f"<script>{REPORT}\n{fixture}\n{host(packed)}\n{open(test).read()}</script></body></html>"
@@ -100,10 +100,10 @@ def page(test, os_name=None):
              .replace("/*LANGSTEP*/", open(os.path.join(UI, "langstep.js")).read(), 1)
              .replace("/*XTERM_CSS*/", xterm("xterm.css"), 1)
              .replace("/*XTERM_JS*/", "".join(xterm(f) + "\n" for f in ["xterm.js", "addon-fit.js", "addon-search.js", "addon-web-links.js"]), 1)
-             .replace("/*LANG*/", f"window.KIRI_LANG = {json.dumps({'os': ['en-US'], 'pick': pick})};", 1)
+             .replace("/*LANG*/", f"window.KIBI_LANG = {json.dumps({'os': ['en-US'], 'pick': pick})};", 1)
              .replace("/*STRINGS*/{}", json.dumps(opening(pick, packed), ensure_ascii=False), 1))
     if os_name and os_name != "macos":
-        index = index.replace("<head>", f'<head><script>window.KIRI_OS = "{os_name}";</script>', 1)
+        index = index.replace("<head>", f'<head><script>window.KIBI_OS = "{os_name}";</script>', 1)
     fixture = open(os.path.join(ROOT, "tests/ui/fixture.js")).read()
     return index[: index.rindex("</body>")] + CATCH + f"<script>{REPORT}\n{fixture}\n{host(packed)}\n{open(test).read()}</script></body></html>"
 

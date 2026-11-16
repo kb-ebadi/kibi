@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!-- The password prompt the window's setup checklist shows on a Linux host:
+     `pkexec /usr/bin/kibi host-access USER` starts Kibi's engine and lets USER
+     use it (crates/kibi/src/hostaccess.rs). -->
+<policyconfig>
+  <vendor>Kibi</vendor>
+  <vendor_url>https://runkibi.kambiz.site</vendor_url>
+  <action id="dev.kibi.host-access">
+    <description>Set up Kibi for an account</description>
+    <message>Kibi needs your password to start its engine and let your account run containers.</message>
+    <icon_name>kibi</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/kibi</annotate>
+  </action>
+</policyconfig>

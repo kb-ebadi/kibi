@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Kibi
+GenericName=Containers
+Comment=Run and share containers
+Exec=/usr/lib/kibi/kibi-window ui
+Icon=/usr/share/icons/hicolor/scalable/apps/kibi.svg
+Terminal=false
+Categories=Development;
+Keywords=docker;containers;kubernetes;
+StartupWMClass=kibi

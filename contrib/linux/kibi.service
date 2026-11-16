@@ -1,0 +1,29 @@
+# Kibi on a Linux host: containers on this machine's kernel, no VM.
+# Install: cargo xtask linux, copy target/linux/release/{kibi,kibi-init} to
+# /usr/local/bin, then:  cp kibi.service /etc/systemd/system/ &&
+#   groupadd -f kibi && systemctl enable --now kibi
+# Users in the `kibi` group:  docker context create kibi --docker host=unix:///run/kibi/docker.sock
+# Membership of the `kibi` group is root-equivalent (a member can mount any
+# path into a container as root), exactly like the `docker` group.
+[Unit]
+Description=Kibi container engine
+Documentation=https://kibi.canestack.com
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/kibi daemon
+Environment=KIBI_SOCKET=/run/kibi/docker.sock
+Environment=KIBI_SOCKET_GROUP=kibi
+Environment=HOME=/var/lib/kibi-daemon
+# The daemon creates the cgroups its containers run in.
+Delegate=yes
+KillMode=mixed
+Restart=on-failure
+RuntimeDirectory=kibi
+# 0755: members of kibi reach the socket (itself 0660 root:kibi) through it.
+RuntimeDirectoryMode=0755
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

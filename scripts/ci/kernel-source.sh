@@ -18,13 +18,13 @@ cd "$tmp/linux-$kver"
 for patch in "$root"/guest/kernel/patches/*.patch; do
   patch -p1 -s < "$patch"
 done
-mkdir kiri
-cp "$root/guest/kernel/build.sh" "$root/guest/kernel/kiri.config" "$root/guest/kernel/kiri-x86_64.config" kiri/
-cp -R "$root/guest/kernel/patches" kiri/
+mkdir kibi
+cp "$root/guest/kernel/build.sh" "$root/guest/kernel/kibi.config" "$root/guest/kernel/kibi-x86_64.config" kibi/
+cp -R "$root/guest/kernel/patches" kibi/
 printf '%s\n' \
-  "Kiri guest kernel corresponding source" \
+  "Kibi guest kernel corresponding source" \
   "Upstream: https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$kver.tar.xz" \
-  "All patches in kiri/patches have already been applied to this tree." \
-  "Build with kiri/build.sh as described in the Kiri repository." > kiri/SOURCE
+  "All patches in kibi/patches have already been applied to this tree." \
+  "Build with kibi/build.sh as described in the Kibi repository." > kibi/SOURCE
 mkdir -p "$(dirname "$out")"
 XZ_OPT=${XZ_OPT:--T0} tar -cJf "$out" -C "$tmp" "linux-$kver"

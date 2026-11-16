@@ -1,13 +1,13 @@
-# Kiri Contributor License Agreement
+# Kibi Contributor License Agreement
 
 Version 1.0
 
 By accepting this agreement through CLA Assistant, you ("Contributor") agree to
-the following terms for every contribution you submit to Kiri.
+the following terms for every contribution you submit to Kibi.
 
 ## 1. Copyright licence
 
-You grant Canestack Labs and the recipients of Kiri a perpetual, worldwide,
+You grant Canestack Labs and the recipients of Kibi a perpetual, worldwide,
 non-exclusive, transferable, irrevocable, royalty-free copyright licence to
 reproduce, modify, publicly display, publicly perform, sublicense, and
 distribute your contribution and derivative works of it, under Apache-2.0 or
@@ -15,13 +15,13 @@ other licence terms.
 
 ## 2. Patent licence
 
-You grant Canestack Labs and the recipients of Kiri a perpetual, worldwide,
+You grant Canestack Labs and the recipients of Kibi a perpetual, worldwide,
 non-exclusive, irrevocable, royalty-free patent licence covering patent claims
 you can license that are necessarily infringed by your contribution, or by the
-combination of your contribution with Kiri, to make, use, sell, offer for sale,
-import, and otherwise transfer Kiri or your contribution.
+combination of your contribution with Kibi, to make, use, sell, offer for sale,
+import, and otherwise transfer Kibi or your contribution.
 
-If you begin or join litigation alleging that Kiri or your contribution
+If you begin or join litigation alleging that Kibi or your contribution
 infringes a patent, your patent licence under this agreement ends.
 
 ## 3. Your authority and the contribution's origin
